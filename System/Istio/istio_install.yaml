@@ -80,17 +80,12 @@ spec:
     chart: gateway
     targetRevision: 1.24.1
     helm:
-      parameters:
-        # ตั้งชื่อให้ชัดเจน ArgoCD จะได้ไม่งง
-        - name: fullnameOverride
-          value: istio-ingress
-        # เปิด LoadBalancer เพื่อดึง Port 80/443 ของเครื่องมาใช้ทันที
-        - name: service.type
-          value: LoadBalancer
-        # บังคับให้ Gateway รันบน Master (Cloud) เท่านั้น
-        - name: nodeSelector.node-role\.kubernetes\.io/control-plane
-          value: "true"
-          forceString: true
+      # เปลี่ยนจาก parameters มาเป็นบล็อก values 
+      values: |
+        service:
+          type: LoadBalancer
+        nodeSelector:
+          node-role.kubernetes.io/control-plane: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
