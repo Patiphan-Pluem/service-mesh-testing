@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus
+    targetRevision: 25.27.0 # เวอร์ชันเสถียร
+    helm:
+      values: |
+        alertmanager:
+          enabled: false # ปิดไว้ก่อนเพื่อประหยัดทรัพยากรบน EC2
+        pushgateway:
+          enabled: false
+        server:
+          persistentVolume:
+            enabled: false # สำหรับ Lab แนะนำให้ใช้ emptyDir เพื่อไม่ให้ติดปัญหาเรื่อง Storage Class
+          global:
+            scrape_interval: 15s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
