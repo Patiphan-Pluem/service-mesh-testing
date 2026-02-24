@@ -115,7 +115,7 @@ spec:
           strategy: anonymous 
         external_services:
           prometheus:
-            url: "http://prometheus.istio-system:9090" 
+            url: "http://prometheus-server.istio-system:9090" 
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
